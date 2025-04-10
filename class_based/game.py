@@ -7,7 +7,7 @@ class GuessGame:
         self.upper = upper
 
     def get_user_input(self):
-        guess = int(input("Please enter a guess (between 1 and 100): "))
+        guess = int(input("Hello, \nPlease enter a guess (between 1 and 100): "))
         return guess
 
     def play_game(self):
