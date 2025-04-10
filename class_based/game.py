@@ -7,7 +7,7 @@ class GuessGame:
         self.upper = upper
 
     def get_user_input(self):
-        guess = int(input("Please enter a guess (between 1 and 100): "))
+        guess = int(input("Hello Dear,\n Please enter a guess (between 1 and 100): "))
         return guess
 
     def play_game(self):
@@ -17,13 +17,15 @@ class GuessGame:
             guess = self.get_user_input()
 
             if guess > self.upper or guess < self.lower :
-                print("Unvalid Input")
+                print("Unvalid Input, Please try again with valid input")
                 continue
 
             if guess > random_num:
                 print(f"higher! the random number is {random_num}")
+            elif guess < random_num:
+                print(f"lower! the random number is {random_num}")
             else:
-                print("equal")
+                print("Equal, congrats")
                 break
 
 
