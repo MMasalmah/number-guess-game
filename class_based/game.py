@@ -1,31 +1,54 @@
 import random
 
+from django.template.defaultfilters import lower
+
 
 class GuessGame:
     def __init__(self, lower = 1, upper = 100):
         self.lower = lower
         self.upper = upper
+        self.random_number = random.randint(lower, upper)
+
 
     def get_user_input(self):
-        guess = int(input("Hello Dear,\n Please enter a guess (between 1 and 100): "))
-        return guess
+        try:
+            guess = int(input(f"Please enter a guess (between {self.lower} and {self.upper}): "))
+            return guess
+        except ValueError:
+            print("Please enter an integer!")
+            return None
+
+    def ckech_bound(self, guess):
+        return self.lower <= guess <= self.upper
+
+    def compare_guess(self, guess):
+        if guess > self.random_number:
+            return "Lower!"
+        elif guess < self.random_number:
+            return "Higher!"
+        else:
+            return "Equal"
 
     def play_game(self):
+        print("Game started !!")
         while True:
-
-            random_num = random.randint(1, 100)
             guess = self.get_user_input()
-
-            if guess > self.upper or guess < self.lower :
-                print("Unvalid Input, Please try again with valid input")
+            if guess is None:
                 continue
 
-            if guess > random_num:
-                print(f"higher! the random number is {random_num}")
-            elif guess < random_num:
-                print(f"lower! the random number is {random_num}")
-            else:
-                print("Equal, congrats")
+            if not self.ckech_bound(guess):
+                print("Out of range. Try again.")
+                continue
+
+            result = self.compare_guess(guess)
+            print(result)
+
+            if result == "Equal":
+                print("You guessed it!")
                 break
+
+
+
+
 
 
