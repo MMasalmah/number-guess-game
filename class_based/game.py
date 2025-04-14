@@ -1,54 +1,42 @@
 import random
 
-from django.template.defaultfilters import lower
-
-
 class GuessGame:
-    def __init__(self, lower = 1, upper = 100):
-        self.lower = lower
-        self.upper = upper
-        self.random_number = random.randint(lower, upper)
+    def __init__(self, lower_limit=1, upper_limit=100):
+        if lower_limit >= upper_limit:
+            raise ValueError("Lower limit must be less than upper limit.")
+        self._lower_limit = lower_limit
+        self._upper_limit = upper_limit
+        self._random_number = random.randint(lower_limit, upper_limit)
 
+    def _get_valid_guess(self) -> int:
+        while True:
+            try:
+                guess = int(input(f"Enter your guess ({self._lower_limit}-{self._upper_limit}): "))
+                if self._is_guess_in_range(guess):
+                    return guess
+                else:
+                    print(f"Your guess is out of bounds! Please enter between {self._lower_limit} and {self._upper_limit}.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
 
-    def get_user_input(self):
-        try:
-            guess = int(input(f"Please enter a guess (between {self.lower} and {self.upper}): "))
-            return guess
-        except ValueError:
-            print("Please enter an integer!")
-            return None
+    def _is_guess_in_range(self, guess: int) -> bool:
+        return self._lower_limit <= guess <= self._upper_limit
 
-    def ckech_bound(self, guess):
-        return self.lower <= guess <= self.upper
+    def _is_correct_guess(self, guess: int) -> bool:
+        return guess == self._random_number
 
-    def compare_guess(self, guess):
-        if guess > self.random_number:
-            return "Lower!"
-        elif guess < self.random_number:
-            return "Higher!"
-        else:
-            return "Equal"
+    def _give_hint(self, guess: int) -> None:
+        if guess < self._random_number:
+            print("Try Higher!")
+        elif guess > self._random_number:
+            print("Try Lower!")
 
     def play_game(self):
-        print("Game started !!")
+        print("Welcome to the Guessing Game!")
         while True:
-            guess = self.get_user_input()
-            if guess is None:
-                continue
-
-            if not self.ckech_bound(guess):
-                print("Out of range. Try again.")
-                continue
-
-            result = self.compare_guess(guess)
-            print(result)
-
-            if result == "Equal":
-                print("You guessed it!")
+            guess = self._get_valid_guess()
+            if self._is_correct_guess(guess):
+                print("Correct! You guessed the number.")
                 break
-
-
-
-
-
-
+            else:
+                self._give_hint(guess)
